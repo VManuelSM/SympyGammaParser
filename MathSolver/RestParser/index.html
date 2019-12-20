@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Presentación de la información</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style> .red {color: #dc3545}</style>
+    <script type="text/javascript">
+        function sendRequest (){
+            var request = new XMLHttpRequest();
+            data = {};
+            input = document.getElementById('input');
+            data['input'] = input.value;
+            var jsonData = JSON.stringify(data);
+            console.log(jsonData);
+            request.onreadystatechange = function(){
+                if (request.readyState == 4 && request.status == 200) {
+                    var codeSite = document.getElementById('response');
+                    input.value = "";
+                    codeSite.innerHTML = request.responseText;
+                    //console.log(request.responseText);
+                }
+            }
+            request.open("POST",'ExpressionManager.php',true);
+            request.setRequestHeader("Content-Type","application/json");
+            request.send(jsonData);
+        }
+    </script>
+</head>
+<body>
+    <header class="shadow p-3">
+        <h1 class="">Sympy expression parser</h1>
+    </header>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="col-lg-12 shadow p-3">
+                    <div class="input-group-prepend">
+                        <input class="col-5 mr-3" id="input" type="text" placeholder="insert a valid input for Sympy Gamma Solver">
+                        <button class="btn btn-dark" onclick="sendRequest()">Enviar</button>
+                    </div>
+            </div>
+            </div>
+            <div class="col-5 mt-5">
+                <div class="shadow p-3 col-lg-12">
+                    <p>The current expression is: </p><p class="red" id="expression"><?echo $input?></p>
+                    <p>The sympy rest URL is: </p><p class="red" id="url"></p>
+                    <p>The simetry in the input is: </p><p class="red"><?if(MathOperatorChecker::verifyMathFunctions($input)) echo "True"; else echo "False";?></p>
+                </div>
+            </div>
+            <div class="col-7 mt-5">
+                <div class="shadow p-3 col-lg-12 float-right" id="response">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
